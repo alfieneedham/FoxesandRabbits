@@ -34,6 +34,7 @@ class Simulation:
     MenuOption = 0
     while (self.__WarrenCount > 0 or self.__FoxCount > 0) and MenuOption != 5:
       print()
+      print("0. Advance 10 time periods hiding detail")
       print("1. Advance to next time period showing detail")
       print("2. Advance to next time period hiding detail")
       print("3. Inspect fox")
@@ -41,6 +42,11 @@ class Simulation:
       print("5. Exit")
       print()
       MenuOption = int(input("Select option: "))
+      if MenuOption == 0:
+        self.__TimePeriod += 10
+        self.__ShowDetail = False
+        for index in range(10):
+          self.__AdvanceTimePeriod()
       if MenuOption == 1:
         self.__TimePeriod += 1
         self.__ShowDetail = True
@@ -487,4 +493,3 @@ def Main():
 
 if __name__ == "__main__":
   Main()
-
