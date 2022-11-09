@@ -454,7 +454,7 @@ class Rabbit(Animal):
 
 def Main():
   MenuOption = 0
-  while MenuOption != 3:
+  while MenuOption != 4:
     print("Predator Prey Simulation Main Menu")
     print()
     print("1. Run simulation with default settings")
@@ -463,13 +463,19 @@ def Main():
     print("4. Exit")
     print()
     MenuOption = int(input("Select option: "))
-    if MenuOption == 1 or MenuOption == 2:
+    if MenuOption == 1 or MenuOption == 2 or MenuOption == 3:
       if MenuOption == 1:
         LandscapeSize = 15
         InitialWarrenCount = 5
         InitialFoxCount = 5
         Variability = 0
         FixedInitialLocations = True
+      elif MenuOption == 3:
+        LandscapeSize = 20
+        InitialWarrenCount = 20
+        InitialFoxCount = 0
+        Variability = 1
+        FixedInitialLocations = False
       else:
         LandscapeSize = int(input("Landscape Size: "))
         InitialWarrenCount = int(input("Initial number of warrens: "))
