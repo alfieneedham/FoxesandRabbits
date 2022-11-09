@@ -431,12 +431,13 @@ class Genders(enum.Enum):
   Female = 2
     
 class Rabbit(Animal):
-  def __init__(self, Variability, ParentsReproductionRate = 1.2):
+  def __init__(self, Variability, ParentsReproductionRate = 1.2, percentageMales = 50):
     self.__DEFAULT_LIFE_SPAN = 4
     self.__DEFAULT_PROBABILITY_DEATH_OTHER_CAUSES  = 0.05
     super(Rabbit, self).__init__(self.__DEFAULT_LIFE_SPAN, self.__DEFAULT_PROBABILITY_DEATH_OTHER_CAUSES, Variability)
     self.__ReproductionRate = ParentsReproductionRate * self._CalculateRandomValue(100, Variability) / 100
-    if random.randint(0, 100) < 50:
+    self.__genderRatio = percentageMales
+    if random.randint(0, 100) < self.__genderRatio:
       self.__Gender = Genders.Male
     else:
       self.__Gender = Genders.Female
