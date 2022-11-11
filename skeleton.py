@@ -344,6 +344,10 @@ class Warren:
       for r in range (0, self.__RabbitCount):
         self.__Rabbits[r].Inspect()
 
+class GiantWarren(Warren):
+  def __init__(self, Variability, RabbitCount = 0):
+    super(Warren, self).
+
 class Animal:
   _ID = 1
 
