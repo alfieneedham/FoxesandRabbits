@@ -11,6 +11,7 @@ class Location:
   def __init__(self):
     self.Fox = None
     self.Warren = None
+    self.Den = None
 
 class Simulation:
   def __init__(self, LandscapeSize, InitialWarrenCount, InitialFoxCount, Variability, FixedInitialLocations):
@@ -114,6 +115,10 @@ class Simulation:
             if self.__ShowDetail:
               self.__Landscape[x][y].Fox.Inspect()
             self.__Landscape[x][y].Fox.ResetFoodConsumed()
+        if not self.__Landscape[x][y].Den is None:
+          self.__Landscape[x][y].Den.advance_generation()
+          if self.__Landscape[x][y].Den.get_need_to_spawn_new_fox() == True:
+            self.__CreateNewFox()
     if NewFoxCount > 0:
       if self.__ShowDetail:
         print("New foxes born: ")
@@ -142,6 +147,8 @@ class Simulation:
       self.__Landscape[11][13].Fox = Fox(self.__Variability)
       self.__Landscape[12][4].Fox = Fox(self.__Variability)
       self.__FoxCount = 5
+      self.__Landscape[2][3].Den = Den(self.__Variability)
+      self.__DenCount = 1
     else:
       for w in range (0, InitialWarrenCount):
         self.__CreateNewWarren()
@@ -165,8 +172,8 @@ class Simulation:
     while not self.__Landscape[x][y].Fox is None:
       x = random.randint(0, self.__LandscapeSize - 1)
       y = random.randint(0, self.__LandscapeSize - 1)
-    if self.__ShowDetail:
-      print("  New Fox at (", x, ",", y, ")", sep = "")
+ #   if self.__ShowDetail:
+    print("  New Fox at (", x, ",", y, ")", sep = "")
     self.__Landscape[x][y].Fox = Fox(self.__Variability)
     self.__FoxCount += 1
 
@@ -219,8 +226,37 @@ class Simulation:
           print("F", end = "")
         else:
           print(" ", end = "")
+        if not self.__Landscape[x][y].Den is None:
+          print("D" + str(self.__Landscape[x][y].Den.get_num_foxes_spawned()), end = "")
+        else:
+          print(" ", end = "")
         print("|", end = "")
+
       print()
+
+class Den:
+  def __init__(self, Variability):
+    self.__variability = Variability
+    self.__numFoxesSpawned = 0
+    self.__periodsRun = 0
+    self.__timeUntilNextFoxSpawn = 3
+    self.__needToCreateNewFox = False
+
+  def advance_generation(self):
+    self.__needToCreateNewFox = False
+    self.__periodsRun += 1
+    self.__timeUntilNextFoxSpawn -= 1
+    if self.__timeUntilNextFoxSpawn == 0:
+      self.__needToCreateNewFox = True
+      self.__numFoxesSpawned += 1
+      self.__timeUntilNextFoxSpawn = 3
+
+  def get_num_foxes_spawned(self):
+    return (self.__numFoxesSpawned)
+
+  def get_need_to_spawn_new_fox(self):
+    return (self.__needToCreateNewFox)
+
 
 class Warren:
   def __init__(self, Variability, RabbitCount = 0, MaxRabbits = 99):
