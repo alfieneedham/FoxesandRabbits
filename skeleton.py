@@ -118,7 +118,7 @@ class Simulation:
         if not self.__Landscape[x][y].Den is None:
           self.__Landscape[x][y].Den.advance_generation()
           if self.__Landscape[x][y].Den.get_need_to_spawn_new_fox() == True:
-            self.__CreateNewFox()
+            NewFoxCount += 1
     if NewFoxCount > 0:
       if self.__ShowDetail:
         print("New foxes born: ")
@@ -148,7 +148,6 @@ class Simulation:
       self.__Landscape[12][4].Fox = Fox(self.__Variability)
       self.__FoxCount = 5
       self.__Landscape[2][3].Den = Den(self.__Variability)
-      self.__DenCount = 1
     else:
       for w in range (0, InitialWarrenCount):
         self.__CreateNewWarren()
@@ -172,8 +171,8 @@ class Simulation:
     while not self.__Landscape[x][y].Fox is None:
       x = random.randint(0, self.__LandscapeSize - 1)
       y = random.randint(0, self.__LandscapeSize - 1)
- #   if self.__ShowDetail:
-    print("  New Fox at (", x, ",", y, ")", sep = "")
+    if self.__ShowDetail:
+      print("  New Fox at (", x, ",", y, ")", sep = "")
     self.__Landscape[x][y].Fox = Fox(self.__Variability)
     self.__FoxCount += 1
 
@@ -216,7 +215,9 @@ class Simulation:
         print(" ", end = "")
       print("", y, "|", sep = "", end = "")
       for x in range (0, self.__LandscapeSize):
-        if not self.__Landscape[x][y].Warren is None:
+        if not self.__Landscape[x][y].Den is None:
+          print("D" + str(self.__Landscape[x][y].Den.get_num_foxes_spawned()), end = "")
+        elif not self.__Landscape[x][y].Warren is None:
           if self.__Landscape[x][y].Warren.GetRabbitCount() < 10:
             print(" ", end = "")
           print(self.__Landscape[x][y].Warren.GetRabbitCount(), end = "")
@@ -224,10 +225,6 @@ class Simulation:
           print("  ", end = "")
         if not self.__Landscape[x][y].Fox is None:
           print("F", end = "")
-        else:
-          print(" ", end = "")
-        if not self.__Landscape[x][y].Den is None:
-          print("D" + str(self.__Landscape[x][y].Den.get_num_foxes_spawned()), end = "")
         else:
           print(" ", end = "")
         print("|", end = "")
