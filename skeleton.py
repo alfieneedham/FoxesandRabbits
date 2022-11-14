@@ -228,7 +228,11 @@ class Simulation:
         else:
           print(" ", end = "")
         print("|", end = "")
-
+      print()
+      if Fox.get_life_excpect >0:
+        print("The average life expectancy of a fox stands at", Fox.get_life_excpect())
+      else:
+        print("The average life expectancy of a fox stands at 7")
       print()
 
 class Den:
@@ -423,7 +427,14 @@ class Animal:
   def _CalculateRandomValue(self, BaseValue, Variability):
     return BaseValue - (BaseValue * Variability / 100) + (BaseValue * random.randint(0, Variability * 2) / 100)
 
+  def get_age(self):
+    return (self._Age)
+
 class Fox(Animal):
+
+  _totalDeadFoxes = 0
+  _totalFoxAge = 0
+
   def __init__(self, Variability):
     self.__DEFAULT_LIFE_SPAN = 7
     self.__DEFAULT_PROBABILITY_DEATH_OTHER_CAUSES = 0.1
@@ -452,6 +463,8 @@ class Fox(Animal):
             print("  Fox ages further due to lack of food.")
         self.CalculateNewAge()
         if not self._IsAlive:
+          Fox._totalDeadFoxes += 1
+          Fox._totalFoxAge += self.get_age()
           if ShowDetail:
             print("  Fox has died of old age.")
 
@@ -474,6 +487,9 @@ class Fox(Animal):
     print("Food eaten", self.__FoodUnitsConsumedThisPeriod, "", end = "")
     print("Gender", self.__gender, "", end = "")
     print()
+
+  def get_life_excpect():
+    return(Fox._totalDeadFoxes / Fox._totalFoxAge)
 
 class Genders(enum.Enum):
   Male = 1
