@@ -42,6 +42,7 @@ class Simulation:
       print("4. Inspect warren")
       print("5. Exit")
       print("6. Find biggest warren")
+      print("7. Inspect all rabbits")
       print()
       MenuOption = int(input("Select option: "))
       if MenuOption == 0:
@@ -72,8 +73,32 @@ class Simulation:
             self.__Landscape[x][y].Warren.ListRabbits()
       if MenuOption == 6:
         self.__find_biggest_warren()
+      if MenuOption == 7:
+        self.__inspect_all_rabbits()
     input()
-    
+
+  def __inspect_all_rabbits(self):
+    listOfAllRabbits = []
+    seperatedListOfAllRabbits = []
+    for x in range(self.__LandscapeSize):
+      for y in range(self.__LandscapeSize):
+        if not self.__Landscape[x][y].Warren is None:
+          listOfAllRabbits.append(self.__Landscape[x][y].Warren.get_all_rabbits())
+    for x in range(len(listOfAllRabbits)):
+      for y in range(len(listOfAllRabbits[x])):
+        seperatedListOfAllRabbits.append(listOfAllRabbits[x][y])
+    stillNeedToBeSorted = True
+    while stillNeedToBeSorted == True:
+      stillNeedToBeSorted = False
+      for index in range(len(seperatedListOfAllRabbits)-1):
+        if seperatedListOfAllRabbits[index].get_rabbit_age() < seperatedListOfAllRabbits[index + 1].get_rabbit_age():
+          rabbitToBeSwapped = seperatedListOfAllRabbits[index + 1]
+          seperatedListOfAllRabbits[index + 1] = seperatedListOfAllRabbits[index]
+          seperatedListOfAllRabbits[index] = rabbitToBeSwapped
+          stillNeedToBeSorted = True
+    for index in range(len(seperatedListOfAllRabbits)):
+      seperatedListOfAllRabbits[index].Inspect()
+  
   def __InputCoordinate(self, CoordinateName):
     Coordinate = int(input("  Input " + CoordinateName + " coordinate:"))
     return Coordinate
@@ -401,6 +426,13 @@ class Warren:
       for r in range (0, self._RabbitCount):
         self._Rabbits[r].Inspect()
 
+  def get_all_rabbits(self):
+    if self._RabbitCount > 0:
+      listOfRabbits = []
+      for r in range(self._RabbitCount):
+        listOfRabbits.append(self._Rabbits[r])
+      return listOfRabbits
+
 class GiantWarren(Warren):
   def __init__(self, Variability, RabbitCount = 0, MaxRabbits = 200):
     super().__init__(Variability, RabbitCount, MaxRabbits)
@@ -435,6 +467,9 @@ class Animal:
     print("Age", self._Age, "", end = "")
     print("LS", self._NaturalLifespan, "", end = "")
     print("Pr dth", round(self._ProbabilityOfDeathOtherCauses, 2), "", end = "")
+
+  def get_rabbit_age(self):
+    return(self._Age)
 
   def CheckIfKilledByOtherFactor(self):
     if random.randint(0, 100) < self._ProbabilityOfDeathOtherCauses * 100:
@@ -530,14 +565,14 @@ class Rabbit(Animal):
     else:
       self.__Gender = Genders.Female
 
-  # Overwrote CheckIfKilledByOtherFactor to increase with age: 
+  def get_rabbit_age(self):
+    return(self._Age)
 
-  def CheckIfKilledByOtherFactor(self):
-    if random.randint(0, 100) < self._ProbabilityOfDeathOtherCauses * 100 * (self._Age * 10):
+  def CalculateNewAge(self):
+    self._Age += 1
+    if self._Age >= self._NaturalLifespan:
       self._IsAlive = False
-      return True
-    else:
-      return False
+      self._ProbabilityOfDeathOtherCauses += 0.1
 
   def Inspect(self):
     super(Rabbit, self).Inspect()
