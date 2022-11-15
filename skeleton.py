@@ -482,10 +482,11 @@ class Fox(Animal):
             print("  Fox ages further due to lack of food.")
         self.CalculateNewAge()
         if not self._IsAlive:
-          Fox._totalDeadFoxes += 1
-          Fox._totalFoxAge += self.get_age()
           if ShowDetail:
             print("  Fox has died of old age.")
+    if not self._IsAlive:
+      Fox._totalDeadFoxes += 1
+      Fox._totalFoxAge += self.get_age()
 
   def ResetFoodConsumed(self):
     self.__FoodUnitsConsumedThisPeriod = 0
@@ -528,6 +529,15 @@ class Rabbit(Animal):
       self.__Gender = Genders.Male
     else:
       self.__Gender = Genders.Female
+
+  # Overwrote CheckIfKilledByOtherFactor to increase with age: 
+
+  def CheckIfKilledByOtherFactor(self):
+    if random.randint(0, 100) < self._ProbabilityOfDeathOtherCauses * 100 * (self._Age * 10):
+      self._IsAlive = False
+      return True
+    else:
+      return False
 
   def Inspect(self):
     super(Rabbit, self).Inspect()
