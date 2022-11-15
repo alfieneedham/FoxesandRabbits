@@ -41,6 +41,7 @@ class Simulation:
       print("3. Inspect fox")
       print("4. Inspect warren")
       print("5. Exit")
+      print("6. Find biggest warren")
       print()
       MenuOption = int(input("Select option: "))
       if MenuOption == 0:
@@ -69,11 +70,26 @@ class Simulation:
           self.__ViewRabbits = input("View individual rabbits (y/n)? ")
           if self.__ViewRabbits == "y":
             self.__Landscape[x][y].Warren.ListRabbits()
+      if MenuOption == 6:
+        self.__find_biggest_warren()
     input()
     
   def __InputCoordinate(self, CoordinateName):
     Coordinate = int(input("  Input " + CoordinateName + " coordinate:"))
     return Coordinate
+
+  def __find_biggest_warren(self):
+    currentBiggestWarrenSize = 0
+    currentBiggestWarrenX = 0
+    currentBiggestWarrenY = 0
+    for x in range(self.__LandscapeSize):
+      for y in range(self.__LandscapeSize):
+        if not self.__Landscape[x][y].Warren is None:
+          if self.__Landscape[x][y].Warren.get_warren_size() > currentBiggestWarrenSize:
+            currentBiggestWarrenSize = self.__Landscape[x][y].Warren.get_warren_size()
+            currentBiggestWarrenX = x
+            currentBiggestWarrenY = y
+    print ("Biggest warren at (" + str(currentBiggestWarrenX) + "," + str(currentBiggestWarrenY) + ")")
   
   def __AdvanceTimePeriod(self):
     NewFoxCount = 0
@@ -273,6 +289,9 @@ class Warren:
       self._RabbitCount = int(self._CalculateRandomValue(int(self._MAX_RABBITS_IN_WARREN / 4), self._Variability))
     for r in range (0, self._RabbitCount):
       self._Rabbits[r] = Rabbit(self._Variability)
+
+  def get_warren_size(self):
+    return (self._RabbitCount)
 
   def _CalculateRandomValue(self, BaseValue, Variability):
     return BaseValue - (BaseValue * Variability / 100) + (BaseValue * random.randint(0, Variability * 2) / 100)
