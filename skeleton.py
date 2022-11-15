@@ -229,11 +229,11 @@ class Simulation:
           print(" ", end = "")
         print("|", end = "")
       print()
-      if Fox.get_life_excpect >0:
-        print("The average life expectancy of a fox stands at", Fox.get_life_excpect())
-      else:
-        print("The average life expectancy of a fox stands at 7")
-      print()
+    print()
+    if Fox.get_life_excpect() > 0:
+      print("The average life expectancy of a fox stands at", Fox.get_life_excpect())
+    else:
+      print("The average life expectancy of a fox stands at 7")
 
 class Den:
   def __init__(self, Variability):
@@ -489,7 +489,10 @@ class Fox(Animal):
     print()
 
   def get_life_excpect():
-    return(Fox._totalDeadFoxes / Fox._totalFoxAge)
+    try:
+      return(Fox._totalFoxAge / Fox._totalDeadFoxes)
+    except:
+      return(0)
 
 class Genders(enum.Enum):
   Male = 1
